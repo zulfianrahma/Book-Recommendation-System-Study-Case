@@ -114,10 +114,10 @@ Tahapan yang dilakukan dalam proses pengembangan model antara lain:
 4.	Mendapatkan rekomendasi
     -	Dalam proses mendapatkan rekomendasi, perlu dibuat sebuah fungsi baru yang digunakan untuk menjalankan proses pencarian rekomendasi. Fungsi tersebut akan dinamakan fungsi **book_recommendations**.
     -	Fungsi **book_reccomendation** yang dibuat mempunyai parameter fungsi sebagai berikut:
-        o	Judul_buku : Judul buku (index kemiripan dataframe).
-        o	Similarity_data : Dataframe mengenai similarity yang telah kita definisikan sebelumnya.
-        o	Items : Nama dan fitur yang digunakan untuk mendefinisikan kemiripan, dalam hal ini adalah ‘book_title’ dan ‘book_author’.
-        o	k : Banyak rekomendasi yang ingin diberikan.
+        -	Judul_buku : Judul buku (index kemiripan dataframe).
+        -	Similarity_data : Dataframe mengenai similarity yang telah kita definisikan sebelumnya.
+        -	Items : Nama dan fitur yang digunakan untuk mendefinisikan kemiripan, dalam hal ini adalah ‘book_title’ dan ‘book_author’.
+        -	k : Banyak rekomendasi yang ingin diberikan.
 
 
 ## Model Development dengan Collaborative Recommendation
