@@ -52,6 +52,7 @@ Tabel 1. Variabel pada berkas *Books.csv*
 |     Image-URL-L     | Tautan URL gambar cover buku dengan L |     object    |
 
 
+
 Tabel 2. Fitur pada berkas *Ratings.csv*
 
 | **Fitur** |     **Deskripsi**    | **Tipe Data** |
@@ -59,6 +60,7 @@ Tabel 2. Fitur pada berkas *Ratings.csv*
 |    User-ID   |      ID pengguna     |    integer    |
 |     ISBN     | Nomor ISBN dari buku |     object    |
 |  Book-Rating |    Peringkat buku    |    integer    |
+
 
 
 Tabel 3. Fitur pada berkas *Users.csv*
@@ -118,7 +120,31 @@ Tahapan yang dilakukan dalam proses pengembangan model antara lain:
         -	Similarity_data : Dataframe mengenai similarity yang telah kita definisikan sebelumnya.
         -	Items : Nama dan fitur yang digunakan untuk mendefinisikan kemiripan, dalam hal ini adalah ‘book_title’ dan ‘book_author’.
         -	k : Banyak rekomendasi yang ingin diberikan.
+          
+    -    Sebagai contoh, pengguna mencari sebuah buku dengan judul **"100 Walks in Tasmania"** dengan informasi ditunjukkan pada Tabel 4
+  
+    Tabel 4. Informasi buku yang dicari dengan judul **"100 Walks in Tasmania"**
+  	
+    |        |   **id**   |     **book_title**    | **book_author** |
+    |:------:|:----------:|:---------------------:|-----------------|
+    | 193433 | 085572191X | 100 Walks in Tasmania |      Thomas     |
+   
+    -    Hasil rekomendasi yang dihasilkan ditunjukkan pada Tabel 5 yang memuat 10 rekomendasi buku berdasarkan judul buku yang telah dicari sebelumnya
 
+    Tabel 5. Hasil rekomendasi buku yang mirip dengan buku yang sebelumnya dicari
+  	
+    |   |                 **book_title**                 |  **book_author**  |
+    |:-:|:----------------------------------------------:|:-----------------:|
+    | 0 |            The Coal Measures Forest            |    B.A. Thomas    |
+    | 1 |      Haunted Mansion (Junior Novelization)     |    James Thomas   |
+    | 2 |           The Ropespinner Conspiracy           | Michael M. Thomas |
+    | 3 | Golden Boy: The Untold Story of William Holden |     Bob Thomas    |
+    | 4 |                    Possessed                   |  Thomas B. Allen  |
+    | 5 |                  Ship of Gold                  |  Thomas B. Allen  |
+    | 6 |                 Chinaman Chance                |    Ross Thomas    |
+    | 7 |      P E T: Parent Effectiveness Training      |   Thomas Gordon   |
+    | 8 |                   Red Dragon                   |   Thomas Harris   |
+    | 9 |           Ich bin o.k., Du bist o.k.           |  Thomas A. Harris |
 
 ## Model Development dengan Collaborative Recommendation
 Pengembangan model berbasis kolaborasi (*collaborative recommendation*) disusun dengan beberapa tahapan yang berbeda dengan pengembangan model berbasis konten (*content based recommendation*). Oleh sebab itu, dilakukan kembali tahapan pengolahan data kembali mulai *data understanding* supaya dataset yang dimiliki dapat digunakan oleh model yang dilatih.
@@ -154,28 +180,22 @@ $$RMSE = \sqrt{(f-o)^2}$$
 Dimana:
     -	f = prakiraan (nilai yang diharapkan atau hasil yang tidak diketahui),
     -	o = nilai yang diamati (hasil yang diketahui).
-Dalam hal ini, untuk menentukan kualitas dari model pada sistem *collaborative recommendation* digunakan RMSE. Semakin besar nilai RMSE menunjukkan kualitas yang buruk pada model tersebut, sebaliknya nilai RMSE yang semakin kecil menunjukkan kualitas model yang baik. Berdasarkan informasi pelatihan model seperti yang ditunjukkan pada Gambar 2 dan Tabel 4, diperoleh nilai RMSE untuk data pelatihan sebesar 0,0639 dan RMSE untuk data validasi sebesar 0,4175. Hal tersebut menunjukkan bahwa model tersebut mempunyai hasil pelatihan yang baik.
+Dalam hal ini, untuk menentukan kualitas dari model pada sistem *collaborative recommendation* digunakan RMSE. Semakin besar nilai RMSE menunjukkan kualitas yang buruk pada model tersebut, sebaliknya nilai RMSE yang semakin kecil menunjukkan kualitas model yang baik. Berdasarkan informasi pelatihan model seperti yang ditunjukkan pada Gambar 2 dan Tabel 6, diperoleh nilai RMSE untuk data pelatihan sebesar 0,0639 dan RMSE untuk data validasi sebesar 0,4175. Hal tersebut menunjukkan bahwa model tersebut mempunyai hasil pelatihan yang baik.
 
 ![download](https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/b4f1daf2-c66a-44c1-9d05-5370d95de64c)
 
 Gambar 2. Metrik Evaluasi Sistem Rekomendasi Berbasi Kolaborasi
 
-Tabel 4. Informasi hasil pelatihan model sistem *collaborative recommendation*
+
+Tabel 6. Informasi hasil pelatihan model sistem *collaborative recommendation*
 
 |           **Model**          | **Epoch** | **RMSE** | **Validation RMSE** |
 |:----------------------------:|:---------:|:--------:|:-------------------:|
 | Collaborative Recommendation |    100    |  0.0656  |        0.4022       |
 
 Selain RMSE, terdapat metrik evaluasi lain yang dapat digunakan, yaitu akurasi. Dalam sistem rekomendasi, akurasi adalah rasio antara jumlah rekomendasi yang relevan diberikan dibandingkan dengan jumlah rekomendasi keseluruhan. Sebagai contoh, jika pengguna menyukai film dengan kategori "Action" dan sistem rekomendasi yang dirancang memberikan 5 rekomendasi film dengan 4 di antaranya adalah film "Action" (sisanya bukan film "Action"), maka akurasi dari model tersebut adalah 80%.
-Dalam sistem rekomendasi "content-based recommendation", digunakan metrik akurasi untuk memberikan evaluasi penilaian dari model. Dalam hal ini, proses evaluasi metrik akurasi ditunjukkan pada Gambar 3 dan Gambar 4 yang menunjukkan proses pengambilan sampel pada sistem rekomendasi yang dirancang.
 
-<img width="390" alt="Buku yang dicari" src="https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/a3ced7af-e523-43a4-8cbc-e4d790f382cd">
-
-Gambar 3. Informasi terkait buku yang ingin dicari
-
-<img width="434" alt="Hasil rekomendasi buku" src="https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/96470532-dda8-456a-a55f-ea55ba0d73db">
-
-Gambar 4. Hasil rekomendasi buku yang mirip dengan buku yang sebelumnya dicari
+Dalam sistem rekomendasi "content-based recommendation", digunakan metrik akurasi untuk memberikan evaluasi penilaian dari model. Dalam hal ini, proses evaluasi metrik akurasi ditunjukkan pada Tabel 4 dan Tabel 5 yang menunjukkan proses pengambilan sampel pada sistem rekomendasi yang dirancang.
 
 Berdasarkan informasi yang dilihat dari Gambar 3, jika pengguna melakukan pencarian buku dengan judul **"100 Walks in Tasmania"**, akan diperoleh informasi bahwa buku tersebut ditulis oleh **Thomas**. Kemudian, model sistem *content-based recommendation* akan menjalankan model dengan input masukan berupa buku yang dicari sebelumnya (**"100 Walks in Tasmania"**) dan diperoleh hasil rekomendasi 10 buku seperti yang ditunjukkan pada Gambar 4. Rekomendasi yang dihasilkan memuat 10 buku dengan nama penulis yang berbeda - beda, namun setiap nama penulis mempunyai kata **"Thomas"** di dalamnya yang merujuk dengan nama penulis buku yang sebelumnya telah dicari. 
 
