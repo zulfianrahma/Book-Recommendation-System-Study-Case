@@ -73,18 +73,8 @@ Tabel 3. Fitur pada berkas *Users.csv*
 ## Data Preprocessing
 Sebelum data diolah pada tahap *data preparation*, data melalui proses pra-pemrosesan yaitu penggabungan data pada tiap berkas dengan langkah teknis sebagai berikut:
 1.	Mendefinisikan  variabel **all_book_rate** dengan variabel **rating** yang telah kita ketahui sebelumnya.
-```
-all_book_rate = ratings
-all_book_rate
-```
 2.	Menggabungkan variabel **all_book_rate** dengan fitur pada berkas *Books.csv* berdasarkan **placeID**
-```
-# Menggabungkan all_book_rate dengan dataframe books berdasarkan placeID
-all_book = pd.merge(all_book_rate, books[['ISBN',	'Book-Title', 'Book-Author']], on='ISBN', how='left')
 
-# Print dataframe all_book
-all_book
-```
 
 Membuat variabel **all_book** yang menampung fitur – fitur pada variabel **all_book_rate** dan variabel **books**. Fitur – fitur digabungkan dengan mencocokkan pada fitur **placeID**.
 Tidak semua fitur pada variabel **books** diambil dimana fitur penerbit buku (*Book-Author*) tidak dimasukkan dengan alasan penyederhanaan model.
@@ -128,44 +118,7 @@ Tahapan yang dilakukan dalam proses pengembangan model antara lain:
         o	Similarity_data : Dataframe mengenai similarity yang telah kita definisikan sebelumnya.
         o	Items : Nama dan fitur yang digunakan untuk mendefinisikan kemiripan, dalam hal ini adalah ‘book_title’ dan ‘book_author’.
         o	k : Banyak rekomendasi yang ingin diberikan.
-```
-def resto_recommendations(judul_buku, similarity_data=cosine_sim_df, items=data[['book_title', 'book_author']], k=5):
-    """
-    Rekomendasi Resto berdasarkan kemiripan dataframe
 
-    Parameter:
-    ---
-    book_title : tipe data string (str)
-                Judul buku (index kemiripan dataframe)
-    similarity_data : tipe data pd.DataFrame (object)
-                      Kesamaan dataframe, simetrik, dengan buku sebagai
-                      indeks dan kolom
-    items : tipe data pd.DataFrame (object)
-            Mengandung kedua nama dan fitur lainnya yang digunakan untuk mendefinisikan kemiripan
-    k : tipe data integer (int)
-        Banyaknya jumlah rekomendasi yang diberikan
-    ---
-
-
-    Pada index ini, kita mengambil k dengan nilai similarity terbesar
-    pada index matrix yang diberikan (i).
-    """
-
-
-    # Mengambil data dengan menggunakan argpartition untuk melakukan partisi secara tidak langsung sepanjang sumbu yang diberikan
-    # Dataframe diubah menjadi numpy
-    # Range(start, stop, step)
-    index = similarity_data.loc[:,judul_buku].to_numpy().argpartition(
-        range(-1, -k, -1))
-
-    # Mengambil data dengan similarity terbesar dari index yang ada
-    closest = similarity_data.columns[index[-1:-(k+2):-1]]
-
-    # Drop judul_buku agar nama resto yang dicari tidak muncul dalam daftar rekomendasi
-    closest = closest.drop(judul_buku, errors='ignore')
-
-    return pd.DataFrame(closest).merge(items).head(k)
-```
 
 ## Model Development dengan Collaborative Recommendation
 Pengembangan model berbasis kolaborasi (*collaborative recommendation*) disusun dengan beberapa tahapan yang berbeda dengan pengembangan model berbasis konten (*content based recommendation*). Oleh sebab itu, dilakukan kembali tahapan pengolahan data kembali mulai *data understanding* supaya dataset yang dimiliki dapat digunakan oleh model yang dilatih.
@@ -184,51 +137,8 @@ Tahapan *data preparation* terdiri dari beberapa langkah teknis, yaitu:
 ### Model Development
 Tahapan *model development* terdiri dari beberapa langkah teknis, yaitu:
 1.	Membuat class RecommenderNet dengan keras Model class.
-```
-class RecommenderNet(tf.keras.Model):
-
-  # Insialisasi fungsi
-  def __init__(self, num_users, num_book, embedding_size, **kwargs):
-    super(RecommenderNet, self).__init__(**kwargs)
-    self.num_users = num_users
-    self.num_book = num_book
-    self.embedding_size = embedding_size
-    self.user_embedding = layers.Embedding( # layer embedding user
-        num_users,
-        embedding_size,
-        embeddings_initializer = 'he_normal',
-        embeddings_regularizer = keras.regularizers.l2(1e-6)
-    )
-    self.user_bias = layers.Embedding(num_users, 1) # layer embedding user bias
-    self.book_embedding = layers.Embedding( # layer embeddings book
-        num_book,
-        embedding_size,
-        embeddings_initializer = 'he_normal',
-        embeddings_regularizer = keras.regularizers.l2(1e-6)
-    )
-    self.resto_bias = layers.Embedding(num_book, 1) # layer embedding book bias
-
-  def call(self, inputs):
-    user_vector = self.user_embedding(inputs[:,0]) # memanggil layer embedding 1
-    user_bias = self.user_bias(inputs[:, 0]) # memanggil layer embedding 2
-    book_vector = self.book_embedding(inputs[:, 1]) # memanggil layer embedding 3
-    book_bias = self.resto_bias(inputs[:, 1]) # memanggil layer embedding 4
-
-    dot_user_book = tf.tensordot(user_vector, book_vector, 2)
-
-    x = dot_user_book + user_bias + book_bias
-
-    return tf.nn.sigmoid(x) # activation sigmoid
-```
 2.	Melakukan proses *compile* dan pelatihan terhadap model
-### Visualisasi Metrik
-Pada tahapan ini, dilakukan visualisasi metrik menggunakan matplotlib.
 
-![download](https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/b4f1daf2-c66a-44c1-9d05-5370d95de64c)
-
-Gambar 2. Metrik Evaluasi Sistem Rekomendasi Berbasi Kolaborasi
-
-Berdasarkan informasi yang diperoleh pada Gambar 2, proses training model cukup smooth dan model konvergen pada epochs sekitar 100. Dari proses ini, kita memperoleh nilai error akhir pada data pelatihan sebesar sekitar 0.07 dan error pada data validasi sebesar 0.42. Nilai tersebut cukup bagus untuk sistem rekomendasi.
 
 ### Mendapatkan Rekomendasi Buku
 Pada tahapan ini, dilakukan dua tahap utama sebelum mendapatkan rekomendasi buku.
@@ -244,12 +154,11 @@ $$RMSE = \sqrt{(f-o)^2}$$
 Dimana:
     -	f = prakiraan (nilai yang diharapkan atau hasil yang tidak diketahui),
     -	o = nilai yang diamati (hasil yang diketahui).
-Dalam hal ini, untuk menentukan kualitas dari model (khususnya pada sistem *collaborative recommendation*) digunakan RMSE. Semakin besar nilai RMSE menunjukkan kualitas yang buruk pada model tersebut, sebaliknya nilai RMSE yang semakin kecil menunjukkan kualitas model yang baik. Berdasarkan informasi pelatihan model seperti yang ditunjukkan pada Gambar 3 dan Tabel 4, diperoleh nilai RMSE untuk data pelatihan sebesar 0,0639 dan RMSE untuk data validasi sebesar 0,4175. Hal tersebut menunjukkan bahwa model tersebut mempunyai hasil pelatihan yang baik.
+Dalam hal ini, untuk menentukan kualitas dari model (khususnya pada sistem *collaborative recommendation*) digunakan RMSE. Semakin besar nilai RMSE menunjukkan kualitas yang buruk pada model tersebut, sebaliknya nilai RMSE yang semakin kecil menunjukkan kualitas model yang baik. Berdasarkan informasi pelatihan model seperti yang ditunjukkan pada Gambar 2 dan Tabel 4, diperoleh nilai RMSE untuk data pelatihan sebesar 0,0639 dan RMSE untuk data validasi sebesar 0,4175. Hal tersebut menunjukkan bahwa model tersebut mempunyai hasil pelatihan yang baik.
 
-<img width="744" alt="hasil training" src="https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/9f54de05-c4ba-4edb-8de1-31740cf8a165">
+![download](https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/b4f1daf2-c66a-44c1-9d05-5370d95de64c)
 
-Gambar 3. Hasil pelatihan model sistem *collaborative recommendation*
-
+Gambar 2. Metrik Evaluasi Sistem Rekomendasi Berbasi Kolaborasi
 
 Tabel 4. Informasi hasil pelatihan model sistem *collaborative recommendation*
 
