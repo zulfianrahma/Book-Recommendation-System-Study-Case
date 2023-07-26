@@ -12,7 +12,7 @@ Sistem rekomendasi dapat diklasifikasikan menjadi tiga kategori berdasarkan baga
 
 ## Business Understanding
 
-Sistem rekomendasi adalah alat canggih yang membuat penelusuran konten menjadi lebih mudah. Sistem ini menyediakan cara untuk mempersonalisasi konten bagi pengguna. Ia seperti filter pada saluran hidran sehingga air yang keluar tidak berlebihan. Dalam kasus informasi di internet, sistem rekomendasi menyaring konten yang muncul di layar agar sesuai dengan kebutuhan atau preferensi. Dengan sistem ini, kita bisa menelusuri internet secara efektif dan tidak akan kewalahan dengan berbagai informasi yang bertebaran. Organisasi atau pelaku bisnis juga dapat meningkatkan revenue atau pemasukan dari transaksi yang terjadi sebagai output dari sistem rekomendasi.
+Sistem rekomendasi adalah alat canggih yang membuat penelusuran konten menjadi lebih mudah. Sistem ini menyediakan cara untuk mempersonalisasi konten bagi pengguna. Ia seperti filter pada saluran hidran sehingga air yang keluar tidak berlebihan. Dalam kasus informasi di internet, sistem rekomendasi menyaring konten yang muncul di layar agar sesuai dengan kebutuhan atau preferensi. Dengan sistem ini, internet dapat ditelusuri secara efektif dan tidak akan membuat pengguna kewalahan dengan berbagai informasi yang bertebaran. Organisasi atau pelaku bisnis juga dapat meningkatkan revenue atau pemasukan dari transaksi yang terjadi sebagai output dari sistem rekomendasi.
 
 Beberapa tujuan dan fungsi sistem rekomendasi secara umum adalah sebagai berikut:
     -	Meningkatkan jumlah item yang terjual
@@ -147,14 +147,14 @@ Pada tahapan ini, dilakukan dua tahap utama sebelum mendapatkan rekomendasi buku
 2.	Melakukan rekomendasi buku menggunakan fungsi model.predict() dari library Keras
 
 ## Evaluation
-Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
+
 Salah satu metrik evaluasi yang umum digunakan adalah *Root mean square error* (RMSE). RMSE, juga dikenal sebagai deviasi kuadrat rata-rata akar, adalah metrik yang banyak digunakan untuk menilai akurasi prediksi. Ini mengukur sejauh mana prediksi menyimpang dari nilai sebenarnya dengan menggunakan jarak Euclidean [6].
 Untuk menghitung RMSE, secara umum digunakan persamaan berikut:
 $$RMSE = \sqrt{(f-o)^2}$$
 Dimana:
     -	f = prakiraan (nilai yang diharapkan atau hasil yang tidak diketahui),
     -	o = nilai yang diamati (hasil yang diketahui).
-Dalam hal ini, untuk menentukan kualitas dari model (khususnya pada sistem *collaborative recommendation*) digunakan RMSE. Semakin besar nilai RMSE menunjukkan kualitas yang buruk pada model tersebut, sebaliknya nilai RMSE yang semakin kecil menunjukkan kualitas model yang baik. Berdasarkan informasi pelatihan model seperti yang ditunjukkan pada Gambar 2 dan Tabel 4, diperoleh nilai RMSE untuk data pelatihan sebesar 0,0639 dan RMSE untuk data validasi sebesar 0,4175. Hal tersebut menunjukkan bahwa model tersebut mempunyai hasil pelatihan yang baik.
+Dalam hal ini, untuk menentukan kualitas dari model pada sistem *collaborative recommendation* digunakan RMSE. Semakin besar nilai RMSE menunjukkan kualitas yang buruk pada model tersebut, sebaliknya nilai RMSE yang semakin kecil menunjukkan kualitas model yang baik. Berdasarkan informasi pelatihan model seperti yang ditunjukkan pada Gambar 2 dan Tabel 4, diperoleh nilai RMSE untuk data pelatihan sebesar 0,0639 dan RMSE untuk data validasi sebesar 0,4175. Hal tersebut menunjukkan bahwa model tersebut mempunyai hasil pelatihan yang baik.
 
 ![download](https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/b4f1daf2-c66a-44c1-9d05-5370d95de64c)
 
@@ -164,10 +164,33 @@ Tabel 4. Informasi hasil pelatihan model sistem *collaborative recommendation*
 
 |           **Model**          | **Epoch** | **RMSE** | **Validation RMSE** |
 |:----------------------------:|:---------:|:--------:|:-------------------:|
-| Collaborative Recommendation |    100    |  0.0639  |        0.4175       |
+| Collaborative Recommendation |    100    |  0.0656  |        0.4022       |
+
+Selain RMSE, terdapat metrik evaluasi lain yang dapat digunakan, yaitu akurasi. Dalam sistem rekomendasi, akurasi adalah rasio antara jumlah rekomendasi yang relevan diberikan dibandingkan dengan jumlah rekomendasi keseluruhan. Sebagai contoh, jika pengguna menyukai film dengan kategori "Action" dan sistem rekomendasi yang dirancang memberikan 5 rekomendasi film dengan 4 di antaranya adalah film "Action" (sisanya bukan film "Action"), maka akurasi dari model tersebut adalah 80%.
+Dalam sistem rekomendasi "content-based recommendation", digunakan metrik akurasi untuk memberikan evaluasi penilaian dari model. Dalam hal ini, proses evaluasi metrik akurasi ditunjukkan pada Gambar 3 dan Gambar 4 yang menunjukkan proses pengambilan sampel pada sistem rekomendasi yang dirancang.
+
+<img width="390" alt="Buku yang dicari" src="https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/a3ced7af-e523-43a4-8cbc-e4d790f382cd">
+
+Gambar 3. Informasi terkait buku yang ingin dicari
+
+<img width="434" alt="Hasil rekomendasi buku" src="https://github.com/zulfianrahma/Book-Recommendation-System-Study-Case/assets/97383651/96470532-dda8-456a-a55f-ea55ba0d73db">
+
+Gambar 4. Hasil rekomendasi buku yang mirip dengan buku yang sebelumnya dicari
+
+Berdasarkan informasi yang dilihat dari Gambar 3, jika pengguna melakukan pencarian buku dengan judul **"100 Walks in Tasmania"**, akan diperoleh informasi bahwa buku tersebut ditulis oleh **Thomas**. Kemudian, model sistem *content-based recommendation* akan menjalankan model dengan input masukan berupa buku yang dicari sebelumnya (**"100 Walks in Tasmania"**) dan diperoleh hasil rekomendasi 10 buku seperti yang ditunjukkan pada Gambar 4. Rekomendasi yang dihasilkan memuat 10 buku dengan nama penulis yang berbeda - beda, namun setiap nama penulis mempunyai kata **"Thomas"** di dalamnya yang merujuk dengan nama penulis buku yang sebelumnya telah dicari. 
+
+Mengikuti persamaan dari akurasi, dengan asumsi bahwa sistem rekomendasi menghasilkan rekomendasi yang tepat jika memuat nama penulis buku yang telah dicari sebelumnya, maka tingkat akurasi dari model *content based recommendation* adalah **100%** karena memuat kata **"Thomas"** pada setiap nama penulis buku yang direkomendasikan. Namun, jika asumsi akurasi yang tepat adalah jika sistem hanya memberikan informasi buku dengan nama penulis yang sama persis (tidak ada tambahan atau perbedaan kata), maka akurasi modelnya adalah **0%**.
+
+Tabel 5. Rangkuman hasil metrik evaluasi tiap model
+
+|           **Model**          | **Metrik Evaluasi** |                       **Nilai**                      |
+|:----------------------------:|:-------------------:|:----------------------------------------------------:|
+| Collaborative Recommendation |         RMSE        | 0.0656 untuk data latih;  0.4022 untuk data validasi |
+| Content-Based Recommendation |       Accuracy      |                         100%                         |
 
 
-
+Berdasarkan penjelasan di atas, dari dua jenis model yang dirancang (*content-based recommendation* dan *collaborative recommendation*), kedua sistem menghasilkan akurasi yang baik jika dalam memuat fitur yang dicari (dalam hal ini adalah fitur *book_author*). Dapat dilakukan proses pelatihan model menggunakan fitur yang berbeda (contohnya fitur *book_publisher*) untuk mengetahui perbandingan relevansi fitur yang digunakan dalam sistem rekomendasi.
+ 
 ## Daftar Pustaka
 1.	G. Jain, T. Mahara, and S. C. Sharma, “Performance Evaluation of Time-based Recommendation System in Collaborative Filtering Technique,” Procedia Comput Sci, vol. 218, pp. 1834–1844, Jan. 2023, doi: 10.1016/J.PROCS.2023.01.161.
 2.	C. Udokwu, R. Zimmermann, F. Darbanian, T. Obinwanne, and P. Brandtner, “Design and Implementation of a Product Recommendation System with Association and Clustering Algorithms,” Procedia Comput Sci, vol. 219, pp. 512–520, Jan. 2023, doi: 10.1016/J.PROCS.2023.01.319.
